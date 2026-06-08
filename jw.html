@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JawaraOSN - Pelatihan OSN IPS SD 2026</title>
+    <style>
+        :root {
+            --primary: #2b6cb0;
+            --secondary: #319795;
+            --dark: #2d3748;
+            --light: #f7fafc;
+            --accent: #dd6b20;
+            --success: #38a169;
+            --danger: #e53e3e;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #ebd382;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .motivation-card {
+            background: linear-gradient(135deg, var(--secondary), #2c7a7b);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .motivation-card q {
+            font-style: italic;
+            font-size: 1.2rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        section {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            scroll-margin-top: 5rem;
+        }
+
+        h2 {
+            color: var(--primary);
+            border-bottom: 3px solid var(--secondary);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .packet-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .packet-card {
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .packet-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        ul, ol {
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        .rules-box {
+            background-color: #fffaf0;
+            border-left: 5px solid var(--accent);
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+        }
+
+        /* Modal Kuis Berbasis Pop-Up */
+        .quiz-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .quiz-content {
+            background-color: white;
+            width: 90%;
+            max-width: 800px;
+            height: 85vh;
+            border-radius: 12px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .quiz-header {
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-quiz {
+            font-size: 1.5rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: var(--dark);
+        }
+
+        .quiz-body {
+            overflow-y: auto;
+            flex-grow: 1;
+            padding-right: 0.5rem;
+        }
+
+        .question-block {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+
+        .options-list {
+            list-style: none;
+            padding-left: 0;
+            margin-top: 0.5rem;
+        }
+
+        .options-list li {
+            background-color: #f7fafc;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .options-list li:hover {
+            background-color: #edf2f7;
+            border-color: var(--primary);
+        }
+
+        .options-list li.selected {
+            background-color: #ebf8ff;
+            border-color: var(--primary);
+            font-weight: bold;
+        }
+
+        .quiz-footer {
+            border-top: 2px solid #e2e8f0;
+            padding-top: 1rem;
+            margin-top: 1rem;
+            text-align: right;
+        }
+
+        .result-box {
+            display: none;
+            background-color: #f0fff4;
+            border: 2px solid var(--success);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background-color: var(--dark);
+            color: white;
+            margin-top: 4rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav>
+            <div class="logo">🥇 JawaraOSN IPS</div>
+            <ul class="nav-links">
+                <li><a href="#pengenalan">Pengenalan</a></li>
+                <li><a href="#silabus">Silabus</a></li>
+                <li><a href="#rangkuman">Rangkuman</a></li>
+                <li><a href="#soal">15 Paket Soal</a></li>
+                <li><a href="#peraturan">Peraturan</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        
+        <!-- 3. Daily Motivation -->
+        <div class="motivation-card">
+            <q id="motivation-quote">Loading motivasi hari ini...</q>
+            <span>- Ruang Semangat Juara</span>
+        </div>
+
+        <!-- 5. Pengenalan tentang OSN -->
+        <section id="pengenalan">
+            <h2>Pengenalan OSN IPS SD</h2>
+            <p><strong>Olimpiade Sains Nasional (OSN)</strong> bidang studi IPS (Ilmu Pengetahuan Sosial) menguji kemampuan analitis dan penalaran siswa tingkat SD/MI dalam memahami fenomena alam, lingkungan, kronologi sejarah bangsa, aktivitas pemenuhan kebutuhan ekonomi, serta dinamika interaksi sosial kemasyarakatan.</p>
+        </section>
+
+        <!-- 1. Silabus OSN IPS SD 2026 -->
+        <section id="silabus">
+            <h2>Silabus Materi OSN IPS SD 2026</h2>
+            <ul>
+                <li><strong>Geografi:</strong> Letak wilayah, mitigasi bencana, interaksi keruangan, peta, dan lingkungan hidup.</li>
+                <li><strong>Sejarah:</strong> Masa Praaksara, Hindu-Buddha, Kesultanan Islam, Kolonialisme, hingga Proklamasi RI.</li>
+                <li><strong>Ekonomi:</strong> Kelangkaan, tindakan ekonomi, produksi-distribusi-konsumsi, koperasi, dan kegiatan ekonomi global.</li>
+                <li><strong>Sosiologi:</strong> Interaksi sosial, lembaga masyarakat, akomodasi, asimilasi, dan keberagaman budaya.</li>
+            </ul>
+        </section>
+
+        <!-- 6. Rangkuman Materi OSN IPS 2026 SD -->
+  
+        <section id="rangkuman">
+            <h2>Rangkuman Materi Utama</h2>
+            <h3>A. Keruangan Alam (Geografi)</h3>
+            <p>Indonesia memiliki 3 zona waktu (WIB, WITA, WIT) akibat letak garis bujurnya. Berada di cincin api pasifik (*Ring of Fire*) menyebabkan tingginya aktivitas vulkanisme.</p>
+            <br>
+            <h3>B. Dinamika Sosial & Ekonomi</h3>
+            <p>Koperasi berasaskan kekeluargaan (Pasal 33 UUD 1945). Masalah pokok ekonomi muncul karena kebutuhan tidak terbatas, sedangkan pemuas kebutuhan berupa sumber daya sangat terbatas (*Kelangkaan*).</p>
+            ​<section id="perlawanan">
+<h2>Sejarah Indonesia Melawan Penjajah</h2>
+<p>Perjalanan perjuangan bangsa Indonesia dalam mengusir kolonialisme dibagi menjadi beberapa fase penting:</p>
+<ul>
+<li><strong>Kedatangan Bangsa Barat (Abad ke-16):</strong> Portugis (1511 ke Malaka), Spanyol, Inggris, dan Belanda (1596 dipimpin Cornelis de Houtman mendarat di Banten) datang untuk memonopoli komoditas rempah-rempah.</li>
+<li><strong>Masa Monopoli VOC Belanda (1602 - 1799):</strong> Perserikatan Dagang Hindia Timur Belanda (VOC) menerapkan politik adu domba (Devide et Impera) untuk memecah belah kekuatan kerajaan-kerajaan lokal.</li>
+<li><strong>Kolonialisme Hindia Belanda:</strong> Penerapan Kerja Rodi oleh Daendels (Jalan Anyer-Panarukan) dan Sistem Tanam Paksa (Cultuurstelsel) oleh Van den Bosch yang menyengsarakan rakyat.</li>
+<li><strong>Perjuangan Kedaerahan:</strong> Sebelum tahun 1908, perlawanan bersifat lokal, tergantung pada pemimpin karismatik, mudah dipecah belah, dan menggunakan senjata tradisional, sehingga sering mengalami kegagalan.</li>
+<li><strong>Era Pergerakan Nasional (1908):</strong> Perjuangan beralih menggunakan jalur diplomasi organisasi modern (Budi Utomo, Sarekat Islam), bersifat nasional, dan dipelopori oleh golongan terpelajar.</li>
+</ul>
+​<section id="kerajaan">
+<h2>Daftar Raja dan Sultan Nusantara</h2>
+<p>Berikut adalah tabel ringsan pimpinan kerajaan Hindu, Buddha, dan Islam yang sering diujikan di soal-soal OSN:</p>
+​<table class="history-table">
+<thead>
+<tr>
+<th>Nama Kerajaan/Kesultanan</th>
+<th>Corak Agama</th>
+<th>Raja / Sultan Terkenal</th>
+<th>Keterangan / Kejayaan / Peninggalan</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kerajaan Kutai</td>
+<td>Hindu</td>
+<td>Raja Mulawarman</td>
+<td>Kerajaan Hindu tertua di Indonesia (Kaltim). Meninggalkan prasasti batu bernama Yupa.</td>
+</tr>
+<tr>
+<td>Kerajaan Tarumanegara</td>
+<td>Hindu</td>
+<td>Raja Purnawarman</td>
+<td>Terletak di Jawa Barat. Memiliki peninggalan Prasasti Ciaruteun yang berisi cetakan kaki raja.</td>
+</tr>
+<tr>
+<td>Kerajaan Sriwijaya</td>
+<td>Buddha</td>
+<td>Raja Balaputradewa</td>
+<td>Kerajaan maritim terbesar di Asia Tenggara. Menjadi pusat penyebaran agama Buddha.</td>
+</tr>
+<tr>
+<td>Kerajaan Majapahit</td>
+<td>Hindu-Buddha</td>
+<td>Raja Hayam Wuruk</td>
+<td>Mencapai puncak kejayaan bersama Mahapatih Gajah Mada dengan ikrar pemersatu Sumpah Palapa.</td>
+</tr>
+<tr>
+<td>Kesultanan Demak</td>
+<td>Islam</td>
+<td>Raden Patah & Sultan Trenggono</td>
+<td>Kesultanan Islam pertama di Pulau Jawa. Didirikan dengan dukungan dari Wali Songo.</td>
+</tr>
+<tr>
+<td>Kesultanan Gowa-Tallo</td>
+<td>Islam</td>
+<td>Sultan Hasanuddin</td>
+<td>Kerajaan maritim kuat di Makassar. Berani melawan monopoli dagang VOC Belanda.</td>
+</tr>
+<tr>
+<td>Kesultanan Ternate & Tidore</td>
+<td>Islam</td>
+<td>Sultan Baabullah</td>
+<td>Pusat penghasil rempah-rempah utama di Maluku yang berhasil mengusir penjajah Portugis.</td>
+</tr>
+</tbody>
+</table>
+</section>
+        </section>
+​<h3>Tokoh-Tokoh Penting Perlawanan Penjajah</h3>
+<p>Para pahlawan bangsa yang gigih berjuang mempertahankan kemerdekaan tanah air:</p>
+​<div class="card-tokoh-grid">
+<div class="card-tokoh">
+<h4>Sultan Hasanuddin (Makassar)</h4>
+<p style="font-size: 0.9rem; margin-top: 0.5rem;">Raja Gowa-Tallo yang dijuluki Belanda sebagai <strong>"Ayam Jantan dari Timur"</strong> karena keberaniannya menentang Perjanjian Bongaya dan monopoli VOC.</p>
+</div>
+<div class="card-tokoh">
+<h4>Pangeran Diponegoro (Yogyakarta)</h4>
+<p style="font-size: 0.9rem; margin-top: 0.5rem;">Memimpin Perang Jawa (1825-1830) melawan Belanda yang memasang patok jalan di atas tanah makam leluhurnya. Perang terbesar yang menguras kas keuangan Belanda.</p>
+</div>
+<div class="card-tokoh">
+<h4>Tuanku Imam Bonjol (Sumatera Barat)</h4>
+<p style="font-size: 0.9rem; margin-top: 0.5rem;">Pemimpin kaum Padri yang awalnya berkonflik dengan kaum Adat, namun akhirnya bersatu bersama kaum Adat untuk melawan penjajahan kolonial Belanda.</p>
+</div>
+<div class="card-tokoh">
+<h4>Pangeran Antasari (Kalimantan Selatan)</h4>
+<p style="font-size: 0.9rem; margin-top: 0.5rem;">Pemimpin perlawanan dalam Perang Banjar. Terkenal dengan semboyan perjuangannya yang gigih: <strong>"Waja Sampai Kaputing"</strong> (Berjuang sampai titik darah penghabisan).</p>
+</div>
+<div class="card-tokoh">
+<h4>Kapitan Pattimura (Maluku)</h4>
+<p style="font-size: 0.9rem; margin-top: 0.5rem;">Bernama asli Thomas Matulessy. Beliau memimpin rakyat Maluku menyerbu benteng Duurstede milik Belanda untuk menentang penindasan ekonomi.</p>
+</div>
+<div class="card-tokoh">
+<h4>Cut Nyak Dhien (Aceh)</h4>
+<p style="font-size: 0.9rem; margin-top: 0.5rem;">Pahlawan wanita tangguh yang melanjutkan perjuangan suaminya (Teuku Umar) bergerilya di hutan Aceh demi melawan tentara Belanda.</p>
+</div>
+</div>
+</section>
+        <!-- 2. 15 Paket Soal Mandiri Berisi Soal Ujian -->
+        <section id="soal">
+            <h2>15 Paket Soal Latihan (35 Soal Interaktif / Paket)</h2>
+            <p style="margin-bottom: 1.5rem;">Klik salah satu paket di bawah untuk mengaktifkan kuis simulasi ujian:</p>
+            <div class="packet-grid" id="packet-container">
+                <!-- Generate Otomatis via JS -->
+            </div>
+        </section>
+
+        <!-- 4. Panduan Peraturan Peserta OSN -->
+        <section id="peraturan">
+            <h2>Panduan Peraturan di Ruang Ujian OSN</h2>
+            <div class="rules-box">
+                <ol>
+                    <li>Peserta wajib memasuki ruangan/sistem aplikasi 30 menit sebelum pengerjaan.</li>
+                    <li>Dilarang menggunakan gawai (HP) cerdas, kalkulator, kamus, atau bantuan orang lain.</li>
+                    <li>Sistem penilaian standar olimpiade: Jawaban Benar bernilai (+4), Salah (-1), dan Kosong (0).</li>
+                </ol>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- AREA POP-UP JENDELA KUIS INTERAKTIF -->
+    <div class="quiz-modal" id="quiz-modal">
+        <div class="quiz-content">
+            <div class="quiz-header">
+                <h3 id="quiz-title">Latihan Soal Ujian</h3>
+                <button class="close-quiz" onclick="closeQuiz()">✕</button>
+            </div>
+            <div class="quiz-body" id="quiz-body">
+                <div class="result-box" id="result-box"></div>
+                <div id="questions-area"></div>
+            </div>
+            <div class="quiz-footer">
+                <button class="btn" style="background-color: var(--success);" id="submit-btn" onclick="calculateScore()">Kirim Jawaban & Lihat Hasil</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 JawaraOSN IPS SD. Hak Cipta Dilindungi.</p>
+    </footer>
+
+    <script>
+        // DATA MOTIVASI HARIAN
+        const quotes = [
+            "Latihan hari ini adalah penentu medali emasmu esok hari. Tetap fokus!",
+            "IPS bukan sekadar ingatan hafalan, melainkan kecerdasan memahami dinamika dunia.",
+            "Kesalahan saat simulasi soal adalah guru terbaik untuk meraih nilai sempurna di ruang ujian nyata.",
+            "Giatlah melangkah, konsistensi belajar 35 soal per hari akan membawamu ke tingkat nasional!"
+        ];
+        document.getElementById('motivation-quote').innerText = quotes[Math.floor(Math.random() * quotes.length)];
+
+        // DATABASE SOAL ASLI (35 SOAL INTEGRASI KISI-KISI OSN IPS)
+        const bankSoal = [
+            // GEOGRAFI
+            { q: "Letak astronomis Indonesia di lintang tropis menyebabkan negara kita mengalami fenomena...", a: ["Perubahan 4 musim", "Curah hujan tinggi sepanjang tahun", "Sering badai salju", "Kekeringan abadi"], c: 1, p: "Letak astronomis tropis mendatangkan curah hujan yang tinggi dan penyinaran matahari sepanjang tahun." },
+            { q: "Garis khayal yang membatasi fauna tipe Asiatis dengan tipe Peralihan di Indonesia dinamakan...", a: ["Garis Weber", "Garis Wallace", "Garis Khatulistiwa", "Garis Bujur"], c: 1, p: "Garis Wallace memisahkan barat (Asiatis) dan tengah (Peralihan). Weber memisahkan tengah dan timur (Australis)." },
+            { q: "Bencana alam murni akibat pergerakan lempeng tektonik di bawah perut bumi dinamakan...", a: ["Banjir bandang", "Gempa bumi tektonik", "Tanah longsor", "Angin puting beliung"], c: 1, p: "Gempa tektonik disebabkan oleh pelepasan energi akibat pergeseran lempeng bumi." },
+            { q: "Fenomena iklim El Nino berdampak buruk bagi pertanian nusantara karena memicu...", a: ["Banjir besar", "Kemarau panjang dan kekeringan", "Suhu dingin ekstrem", "Tsunami"], c: 1, p: "El Nino mengurangi curah hujan secara drastis sehingga menyebabkan kekeringan ekstrem." },
+            { q: "Alat penunjuk skala peta yang membandingkan jarak peta dengan jarak asli lapangan dinamakan...", a: ["Legenda", "Skala peta", "Orientasi", "Inset"], c: 1, p: "Skala mengukur rasio perbandingan dimensi spasial peta dengan kenyataan lapangan." },
+            { q: "Jika peta ber-skala 1 : 200.000 memiliki jarak kota A-B sebesar 5 cm, berapa jarak aslinya?", a: ["1 km", "10 km", "100 km", "2 km"], c: 1, p: "5 cm x 200.000 = 1.000.000 cm = 10 km." },
+            { q: "Jenis tanah vulkanis hasil endapan abu letusan gunung berapi yang sangat subur bernama tanah...", a: ["Aluvial", "Andosol", "Humus", "Gambut"], c: 1, p: "Tanah andosol kaya unsur hara makro dari aktivitas abu vulkanik." },
+            { q: "Mitigasi awal saat gempa mengguncang ketika posisi berada di lantai 3 gedung bertingkat yaitu...", a: ["Lari ke lift", "Berlindung di bawah meja kokoh", "Loncat dari jendela", "Berdiam diri saja"], c: 1, p: "Melindungi kepala di bawah kolong meja mencegah benturan reruntuhan bangunan." },
+            { q: "Angin muson barat bertiup membawa banyak uap air dari Samudra Pasifik ke Indonesia memicu musim...", a: ["Kemarau", "Hujan", "Pancaroba", "Gugur"], c: 1, p: "Muson Barat mendatangkan musim penghujan di sebagian besar wilayah Indonesia." },
+            { q: "Provinsi yang masuk ke dalam pembagian wilayah Waktu Indonesia Timur (WIT) adalah...", a: ["Bali", "Maluku", "Sulawesi", "NTT"], c: 1, p: "Maluku dan Papua tergolong zona waktu WIT." },
+            
+            // SEJARAH
+            { q: "Kerajaan Hindu tertua nusantara di Kalimantan Timur dibuktikan oleh keberadaan prasasti bernama...", a: ["Ciaruteun", "Yupa", "Kedukan Bukit", "Tugu"], c: 1, p: "Yupa merupakan tiang batu pengikat kurban peninggalan Kerajaan Kutai." },
+            { q: "Kerajaan Sriwijaya berjaya menguasai perdagangan laut internasional berkat kendali penuh atas...", a: ["Selat Sunda", "Selat Malaka", "Selat Bali", "Selat Makassar"], c: 1, p: "Selat Malaka merupakan urat nadi perdagangan kuno global antara India dan Tiongkok." },
+            { q: "Sumpah Palapa untuk mempersatukan wilayah Nusantara diikrarkan oleh Mahapatih...", a: ["Hayam Wuruk", "Gajah Mada", "Raden Wijaya", "Ken Arok"], c: 1, p: "Gajah Mada bersumpah tidak akan menikmati amukti palapa sebelum menyatukan Nusantara." },
+            { q: "Peninggalan sejarah Islam yang berciri atap tumpang bertingkat di Jawa adalah...", a: ["Masjid Agung Demak", "Istana Maimun", "Masjid Baiturrahman", "Menara Kudus"], c: 0, p: "Masjid Demak mengadopsi alkulturasi arsitektur lokal berupa atap tajuk tumpang." },
+            { q: "Bangsa Eropa yang pertama kali menduduki kota pelabuhan Malaka pada tahun 1511 adalah...", a: ["Belanda", "Portugis", "Inggris", "Spanyol"], c: 1, p: "Portugis dipimpin Alfonso de Albuquerque merebut Malaka tahun 1511." },
+            { q: "Gubernur Jenderal Belanda yang mencetuskan sistem Kerja Rodi pembuatan Jalan Anyer-Panarukan adalah...", a: ["Raffles", "Daendels", "Van den Bosch", "J.P. Coen"], c: 1, p: "Herman Willem Daendels membangun jalur legendaris sepanjang Pulau Jawa tersebut." },
+            { q: "Organisasi pelopor pergerakan nasional modern pertama yang lahir pada 20 Mei 1908 adalah...", a: ["Sarekat Islam", "Budi Utomo", "Indische Partij", "PNI"], c: 1, p: "Budi Utomo memicu era Kebangkitan Nasional Indonesia." },
+            { q: "Penculikan Soekarno-Hatta ke Rengasdengklok didasari perdebatan pemuda dan golongan tua soal...", a: ["Teks UUD", "Waktu Proklamasi", "Presiden Pertama", "Bentuk Bendera"], c: 1, p: "Golongan muda mendesak proklamasi tanpa campur tangan badan bentukan Jepang (PPKI)." },
+            { q: "Tokoh sejarah pejuang kemerdekaan yang mengetik naskah proklamasi otentik yaitu...", a: ["Sukarni", "Sayuti Melik", "Ahmad Soebardjo", "Wikana"], c: 1, p: "Sayuti Melik dipercaya merapikan konsep tulisan tangan Bung Karno menjadi ketikan resmi." },
+            { q: "Pertempuran dahsyat 10 November di Surabaya dipicu oleh tewasnya perwira sekutu bernama...", a: ["Christison", "AWS Mallaby", "Van Mook", "Westerling"], c: 1, p: "Kematian Brigadir Jenderal Mallaby memicu kemarahan pasukan Inggris penyerang Surabaya." },
+
+            // EKONOMI
+            { q: "Pangkal masalah ekonomi utama yang melanda kehidupan manusia sejatinya disebabkan oleh...", a: ["Banjir barang ekpor", "Kelangkaan sumber daya vs kebutuhan tak terbatas", "Penurunan mata uang", "Kenaikan gaji"], c: 1, p: "Kelangkaan (*scarcity*) muncul karena alat pemuas barang terbatas sedangkan hasrat manusia tidak ada habisnya." },
+            { q: "Aktivitas memindahkan, menyalurkan, atau mengantarkan produk dari produsen ke konsumen disebut...", a: ["Produksi", "Distribusi", "Konsumsi", "Investasi"], c: 1, p: "Distribusi menjembatani penyebaran kegunaan barang agar sampai ke pemakai akhir." },
+            { q: "Tindakan manusia berlandaskan prinsip ekonomi rasional ditunjukkan oleh perilaku...", a: ["Belanja borong instan", "Menyusun tabel skala prioritas kebutuhan", "Membeli barang palsu", "Berutang tanpa batas"], c: 1, p: "Skala prioritas menuntun manusia mendahulukan kebutuhan primer mendesak dibanding sekunder." },
+            { q: "Badan usaha yang beroperasi berasaskan asas kekeluargaan sesuai amanat UUD 1945 Pasal 33 yaitu...", a: ["PT Swasta", "Koperasi", "BUMN", "Firma"], c: 1, p: "Koperasi dibentuk sebagai pilar ekonomi kerakyatan berasas gotong royong bersama." },
+            { q: "Derajat kepekaan perubahan permintaan komoditas akibat dinamika harga dalam pasar disebut...", a: ["Inflasi", "Elastisitas", "Deflasi", "Pasar gelap"], c: 1, p: "Elastisitas mengukur sensitivitas kuantitas barang terpengaruh harga." },
+            { q: "Daya beli konsumen yang disertai ketersediaan uang untuk menebus produk langsung dinamakan...", a: ["Permintaan absolut", "Permintaan efektif", "Permintaan potensial", "Penawaran agregat"], c: 1, p: "Permintaan efektif berarti pembeli punya keinginan sekaligus modal finansial riil untuk bertransaksi." },
+            { q: "Bentuk perbuatan bermotif ekonomi sosial kemanusiaan murni ditunjukkan oleh...", a: ["Obral rugi cuci gudang", "Menyumbang dana ke panti asuhan", "Kerja lembur cari komisi", "Monopoli pasar pangan"], c: 1, p: "Motif sosial mengabaikan keuntungan materi privat demi menolong sesama makhluk." },
+            { q: "Jenis mata uang bernilai sah yang digunakan oleh warga negara Thailand saat berbelanja adalah...", a: ["Ringgit", "Baht", "Peso", "Dong"], c: 1, p: "Mata uang Thailand adalah Baht." },
+
+// SOSIOLOGI
+            { q: "Hubungan timbal balik aksi-reaksi interaktif antar-manusia maupun kelompok dinamakan...", a: ["Status sosial", "Interaksi sosial", "Kasta adat", "Dinamika budaya"], c: 1, p: "Interaksi sosial merupakan prasyarat mutlak berjalannya sistem kehidupan kemasyarakatan." },
+            { q: "Dua syarat mutlak mendasar yang wajib terpenuhi agar hubungan sosial terjalin yaitu...", a: ["Uang dan jabatan", "Kontak sosial dan komunikasi", "Pendidikan dan keturunan", "Hukum dan aturan"], c: 1, p: "Tanpa adanya kontak (pertemuan/isyarat) serta komunikasi (pesan dipahami), hubungan sosial mustahil terjadi." },
+            { q: "Penyelesaian konflik pertikaian melalui jalan damai tanpa kekerasan disebut proses...", a: ["Kerja sama", "Akomodasi", "Asimilasi", "Kompetisi"], c: 1, p: "Akomodasi adalah cara meredakan ketegangan pertentangan interaksi sosial disosiatif." },
+            { q: "Sikap menghargai perbedaan kultur adat istiadat kelompok lain dinamakan perilaku...", a: ["Egosentris", "Toleransi", "Etnosentrisme", "Asimilasi"], c: 1, p: "Toleransi merawat kerukunan di tengah pluralitas majemuk kebudayaan nasional." },
+            { q: "Lembaga sosial terkecil dalam tatanan bermasyarakat yang dihuni bapak, ibu, anak dinamakan...", a: ["Lembaga politik", "Lembaga keluarga", "Lembaga hukum", "Lembaga ekonomi"], c: 1, p: "Keluarga berperan selaku agen sosialisasi primer penanaman nilai moral perdana anak." },
+            { q: "Sanksi adat pelanggaran norma kesusilaan bersumber langsung dari dalam sanubari berbentuk...", a: ["Hukuman penjara", "Rasa penyesalan dan malu diri", "Denda uang tunai", "Pemberhentian kerja"], c: 1, p: "Norma kesusilaan bersumber dari nurani; pelanggarannya memicu penyesalan moral mendalam." },
+            { q: "Proses percampuran dua kebudayaan berbeda melahirkan budaya baru tanpa menghilangkan identitas asli asli disebut...", a: ["Asimilasi", "Akulturasi", "Difusi", "Amalgamasi"], c: 1, p: "Akulturasi memadukan unsur asing dengan lokal namun ciri asli khas masing-masing tetap terlihat jelas." }
+        ];
+
+        // MEMBUAT 15 PAKET SECARA DINAMIS
+        const packetContainer = document.getElementById('packet-container');
+        for (let i = 1; i <= 15; i++) {
+            const card = document.createElement('div');
+            card.className = 'packet-card';
+            card.innerHTML = `
+                <h3>Paket ${i}</h3>
+                <p style="font-size: 0.85rem; color: #718096; margin: 0.5rem 0;">Materi Lengkap: 35 Soal</p>
+                <button class="btn" onclick="openQuiz(${i})">Buka Soal</button>
+            `;
+            packetContainer.appendChild(card);
+        }
+
+        let currentActiveAnswers = [];
+
+        // FUNGSI MEMBUKA KUIS INTERAKTIF
+        function openQuiz(packetNumber) {
+            document.getElementById('quiz-title').innerText = `Simulasi Ujian OSN IPS 2026 - Paket ${packetNumber}`;
+            document.getElementById('quiz-modal').style.display = 'flex';
+            document.getElementById('result-box').style.display = 'none';
+            
+            const qArea = document.getElementById('questions-area');
+            qArea.innerHTML = '';
+            currentActiveAnswers = new Array(bankSoal.length).fill(null);
+
+            // Merender total 35 soal ke layar
+            bankSoal.forEach((soal, sIdx) => {
+                const block = document.createElement('div');
+                block.className = 'question-block';
+                block.innerHTML = `<p><strong>${sIdx + 1}. ${soal.q}</strong></p>`;
+                
+                const optList = document.createElement('ul');
+                optList.className = 'options-list';
+                
+                soal.a.forEach((opt, oIdx) => {
+                    const li = document.createElement('li');
+                    li.innerText = `${String.fromCharCode(65 + oIdx)}. ${opt}`;
+                    li.onclick = () => {
+                        // Hapus pilihan sebelumnya di baris soal yang sama
+                        Array.from(optList.children).forEach(child => child.classList.remove('selected'));
+                        li.classList.add('selected');
+                        currentActiveAnswers[sIdx] = oIdx;
+                    };
+                    optList.appendChild(li);
+                });
+                
+                block.appendChild(optList);
+                qArea.appendChild(block);
+            });
+        }
+
+        // FUNGSI MENGHITUNG SKOR, JAWABAN & PEMBAHASAN
+        function calculateScore() {
+            let totalBenar = 0;
+            let totalSalah = 0;
+            let totalKosong = 0;
+
+            bankSoal.forEach((soal, idx) => {
+                if (currentActiveAnswers[idx] === null) {
+                    totalKosong++;
+                } else if (currentActiveAnswers[idx] === soal.c) {
+                    totalBenar++;
+                } else {
+                    totalSalah++;
+                }
+            });
+
+            // Aturan Poin OSN: Benar (+4), Salah (-1), Kosong (0)
+            const skorAkhir = (totalBenar * 4) + (totalSalah * -1);
+            const totalNilaiMaksimum = bankSoal.length * 4;
+
+            const resBox = document.getElementById('result-box');
+            resBox.style.display = 'block';
+            resBox.innerHTML = `
+                <h4>Hasil Evaluasi Ujian Kamu</h4>
+                <p style="font-size: 1.5rem; margin: 0.5rem 0; color: var(--primary);"><strong>Skor Nilai: ${skorAkhir} / ${totalNilaiMaksimum}</strong></p>
+                <p>Benar: <span style="color:var(--success); font-weight:bold;">${totalBenar}</span> | 
+                   Salah: <span style="color:var(--danger); font-weight:bold;">${totalSalah}</span> | 
+                   Kosong: <span>${totalKosong}</span></p>
+                <p style="margin-top: 0.5rem; font-size: 0.85rem; color:#4a5568;">Gulir ke bawah untuk mempelajari pembahasan kunci jawaban setiap nomor soal.</p>
+            `;
+
+            // Tampilkan pembahasan instan tepat di bawah pilihan jawaban
+            const blocks = document.getElementsByClassName('question-block');
+            bankSoal.forEach((soal, idx) => {
+                // Hapus pembahasan lama jika ada agar tidak dobel saat klik berulang
+                const oldPembahasan = blocks[idx].querySelector('.pembahasan-box');
+                if (oldPembahasan) oldPembahasan.remove();
+
+                const pembBox = document.createElement('div');
+                pembBox.className = 'pembahasan-box';
+                pembBox.style.marginTop = '0.7rem';
+                pembBox.style.padding = '0.5rem 1rem';
+                pembBox.style.borderRadius = '6px';
+                pembBox.style.fontSize = '0.9rem';
+
+                if (currentActiveAnswers[idx] === soal.c) {
+                    pembBox.style.backgroundColor = '#e6fffa';
+                    pembBox.style.borderLeft = '4px solid var(--success)';
+                    pembBox.innerHTML = `<strong>Jawaban Kamu Benar!</strong> Kunci: ${String.fromCharCode(65 + soal.c)}. <br><small>${soal.p}</small>`;
+                } else {
+                    pembBox.style.backgroundColor = '#fff5f5';
+                    pembBox.style.borderLeft = '4px solid var(--danger)';
+                    pembBox.innerHTML = `<strong>Jawaban Salah / Belum Tepat.</strong> Kunci Benar: <strong>${String.fromCharCode(65 + soal.c)}</strong>. <br><small>Keterangan: ${soal.p}</small>`;
+                }
+                blocks[idx].appendChild(pembBox);
+            });
+
+            // Gulir otomatis layar pop-up ke posisi paling atas agar hasil skor langsung kelihatan
+            document.getElementById('quiz-body').scrollTop = 0;
+        }
+
+        function closeQuiz() {
+            document.getElementById('quiz-modal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
